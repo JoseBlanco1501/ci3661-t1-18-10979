@@ -155,12 +155,29 @@ promedioSobreUmbral umbral xs =
        else Just (suma / fromIntegral cuenta)
 
 -- B2
+-- Devuelve la lista de casillas válidas a las que un caballo puede moverse desde
+-- la posición dada en un tablero de ajedrez (1 a 8), ordenadas lexicográficamente.
 movimientosCaballo :: (Int, Int) -> [(Int, Int)]
-movimientosCaballo = undefined
+movimientosCaballo (r, c) =
+  -- Comprensión de listas: genera casillas (r', c') evaluando desplazamientos (dr, dc).
+  -- Como la lista de desplazamientos ya está ordenada por fila y luego por columna,
+  -- el resultado se genera automáticamente en orden lexicográfico.
+  [ (r', c')
+  | (dr, dc) <- [(-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1)]
+  , let r' = r + dr
+  , let c' = c + dc
+  , r' >= 1 && r' <= 8 && c' >= 1 && c' <= 8  -- Filtro para no salirse del tablero
+  ]
 
+-- Cantidad de casillas distintas alcanzables por un caballo en exactamente dos saltos.
 enDosSaltos :: (Int, Int) -> Int
-enDosSaltos = undefined
-
+enDosSaltos pos =
+  -- Anidamos dos generadores: para la casilla dada calculamos saltos 'p1', y desde cada 'p1' saltos 'p2'.
+  let destinos = [ p2 | p1 <- movimientosCaballo pos, p2 <- movimientosCaballo p1 ]
+      -- Eliminamos casillas repetidas plegando con foldr: si el elemento ya está en el acumulador, se omite.
+      sinRepetidos = foldr (\x acc -> if elem x acc then acc else x : acc) [] destinos
+  in length sinRepetidos
+  
 -- B3
 miMap :: (a -> b) -> [a] -> [b]
 miMap = undefined
