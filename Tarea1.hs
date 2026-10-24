@@ -113,7 +113,7 @@ leerHora [h1, h2, ':', m1, m2]
     h = digitToInt h1 * 10 + digitToInt h2
     m = digitToInt m1 * 10 + digitToInt m2
 -- El comodín '_' atrapa cualquier longitud o estructura que no calce el patrón anterior.
-leerHora _ = Left "formato invalido"
+leerHora _ = Left "formato inválido"
 
 -- Calcula la diferencia en minutos entre dos horas en formato "HH:MM".
 -- Si la segunda hora es anterior a la primera, se asume que corresponde al día siguiente.
