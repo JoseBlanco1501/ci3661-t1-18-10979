@@ -91,11 +91,49 @@ auxMayorMenor maxAct minAct (y:ys)
 
 
 -- A3
+-- Lee una cadena en formato "HH:MM" (24 horas) y devuelve (hora, minutos).
+-- Retorna Left con el mensaje de error si el formato o los rangos son incorrectos.
 leerHora :: String -> Either String (Int, Int)
-leerHora = undefined
+-- Desestructuración por patrón: calza exactamente listas de 5 caracteres con ':' en medio.
+leerHora [h1, h2, ':', m1, m2]
+  -- Verifica que los 4 caracteres restantes sean dígitos ('0'..'9').
+  | not (isDigit h1 && isDigit h2 && isDigit m1 && isDigit m2) =
+      Left "formato inválido"
+  -- Verifica rango de horas (0 a 23).
+  | h > 23 =
+      Left "hora fuera de rango"
+  -- Verifica rango de minutos (0 a 59).
+  | m > 59 =
+      Left "minutos fuera de rango"
+  -- Si todas las validaciones son correctas, retorna el par numérico en 'Right'.
+  | otherwise =
+      Right (h, m)
+  where
+    -- 'digitToInt' convierte caracteres como '1' al número entero 1.
+    h = digitToInt h1 * 10 + digitToInt h2
+    m = digitToInt m1 * 10 + digitToInt m2
+-- El comodín '_' atrapa cualquier longitud o estructura que no calce el patrón anterior.
+leerHora _ = Left "formato inválido"
 
+-- Calcula la diferencia en minutos entre dos horas en formato "HH:MM".
+-- Si la segunda hora es anterior a la primera, se asume que corresponde al día siguiente.
 duracion :: String -> String -> Either String Int
-duracion = undefined
+duracion s1 s2 =
+  -- 'case ... of' analiza el resultado de leerHora: si falla, propaga el error (Left);
+  -- si tiene éxito (Right), extrae las horas y minutos para continuar.
+  case leerHora s1 of
+    Left err1 -> Left err1
+    Right (h1, m1) ->
+      case leerHora s2 of
+        Left err2 -> Left err2
+        Right (h2, m2) ->
+          let t1 = h1 * 60 + m1
+              t2 = h2 * 60 + m2
+              diff = t2 - t1
+          -- Si 'diff < 0' significa que la hora 2 es anterior a la 1, por lo que
+          -- se le suman 1440 minutos (24 horas) para considerar el día siguiente.
+          in Right (if diff < 0 then diff + 1440 else diff)
+
 
 -- =====================================================================
 -- Parte B: orden superior.
