@@ -1,11 +1,13 @@
 -- =====================================================================
 --  CI-3661 — Tarea 1 (Haskell) — Septiembre–Diciembre 2026
 --
---  Nombre:
---  Carnet:
+--  Nombre: Jose Alejandro Blanco
+--  Carnet: 18-10979
 --
 --  Declaración de uso de herramientas de IA (obligatoria, ver enunciado):
---
+--  Se utilizó asistencia de copilot como apoyo para entender la sintaxis de
+--  haskell, mensajes de error, verificación lógica y redacción de las 
+--  justificaciones paso a paso.
 -- =====================================================================
 --  No cambies el nombre del módulo ni la lista de exportación, ni las
 --  firmas de las funciones. Puedes agregar todas las funciones auxiliares
