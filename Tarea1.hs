@@ -33,8 +33,38 @@ import Data.Char (isAlphaNum, isDigit, toLower, digitToInt)
 -- =====================================================================
 
 -- A1
+-- Determina si una cadena es palíndromo, considerando únicamente caracteres
+-- alfanuméricos y sin distinguir entre mayúsculas y minúsculas.
 esPalindromo :: String -> Bool
-esPalindromo = undefined
+esPalindromo s =
+  -- 'let ... in' define una expresión local: primero limpiamos la cadena
+  -- y luego comprobamos si es idéntica a su versión invertida.
+  let limpia = limpiar s
+  in limpia == invertir limpia
+
+-- Filtra los caracteres alfanuméricos de una cadena y los convierte a minúsculas.
+limpiar :: String -> String
+-- Caso base: una cadena vacía no tiene caracteres que procesar.
+limpiar [] = []
+-- Caso recursivo: se separa la cabeza 'c' y la cola 'cs' mediante (c:cs).
+limpiar (c:cs)
+  -- Las guardas (| condición) se evalúan en orden:
+  -- Si 'c' es letra o dígito, se convierte a minúscula y se une (:) con la llamada recursiva.
+  | isAlphaNum c = toLower c : limpiar cs
+  -- Si no es alfanumérico (espacios, signos), se descarta y se continúa con 'cs'.
+  | otherwise    = limpiar cs
+
+-- Invierte el orden de los elementos de una lista de caracteres.
+-- Inicializa la función auxiliar pasando una lista vacía como acumulador inicial.
+invertir :: String -> String
+invertir xs = invertirAux xs []
+
+-- Acumula los elementos de la lista en orden inverso mediante recursión de cola.
+invertirAux :: String -> String -> String
+-- Caso base: al terminar la lista original, el acumulador contiene la cadena invertida.
+invertirAux [] acc = acc
+-- Caso inductivo: coloca la cabeza actual 'c' al frente del acumulador (c:acc).
+invertirAux (c:cs) acc = invertirAux cs (c:acc)
 
 -- A2
 -- Explica aquí, en dos o tres líneas, por qué tu solución recorre la
