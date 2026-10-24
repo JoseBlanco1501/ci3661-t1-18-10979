@@ -67,11 +67,28 @@ invertirAux [] acc = acc
 invertirAux (c:cs) acc = invertirAux cs (c:acc)
 
 -- A2
--- Explica aquí, en dos o tres líneas, por qué tu solución recorre la
--- lista una sola vez:
+-- La función auxiliar 'auxMayorMenor' recorre la lista mediante una recursión de cola
+-- procesando cada elemento exactamente una vez, manteniendo y actualizando de forma
+-- simultánea el par con el valor máximo y mínimo encontrados hasta el momento.
 --
+-- Devuelve el par (máximo, mínimo) de una lista, o Nothing si la lista está vacía.
 mayorYMenor :: Ord a => [a] -> Maybe (a, a)
-mayorYMenor = undefined
+-- Si la lista está vacía, Haskell retorna el constructor 'Nothing'.
+mayorYMenor [] = Nothing
+-- Si tiene al menos un elemento 'x', se inicializan los dos extremos con 'x'
+-- y se envuelve el resultado final en el constructor 'Just'.
+mayorYMenor (x:xs) = Just (auxMayorMenor x x xs)
+
+-- Recorre los elementos de la lista actualizando el máximo y mínimo acumulados.
+auxMayorMenor :: Ord a => a -> a -> [a] -> (a, a)
+-- Caso base: cuando ya no quedan elementos por revisar, devuelve el par (max, min).
+auxMayorMenor maxAct minAct [] = (maxAct, minAct)
+-- Caso recursivo: se evalúa el elemento actual 'y' frente a los acumuladores:
+auxMayorMenor maxAct minAct (y:ys)
+  | y > maxAct = auxMayorMenor y minAct ys       -- Si supera al máximo, se actualiza maxAct.
+  | y < minAct = auxMayorMenor maxAct y ys       -- Si es menor al mínimo, se actualiza minAct.
+  | otherwise  = auxMayorMenor maxAct minAct ys  -- En caso contrario, ambos acumuladores se mantienen.
+
 
 -- A3
 leerHora :: String -> Either String (Int, Int)
