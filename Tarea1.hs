@@ -113,7 +113,7 @@ leerHora [h1, h2, ':', m1, m2]
     h = digitToInt h1 * 10 + digitToInt h2
     m = digitToInt m1 * 10 + digitToInt m2
 -- El comodín '_' atrapa cualquier longitud o estructura que no calce el patrón anterior.
-leerHora _ = Left "formato inválido"
+leerHora _ = Left "formato invalido"
 
 -- Calcula la diferencia en minutos entre dos horas en formato "HH:MM".
 -- Si la segunda hora es anterior a la primera, se asume que corresponde al día siguiente.
@@ -177,13 +177,21 @@ enDosSaltos pos =
       -- Eliminamos casillas repetidas plegando con foldr: si el elemento ya está en el acumulador, se omite.
       sinRepetidos = foldr (\x acc -> if elem x acc then acc else x : acc) [] destinos
   in length sinRepetidos
-  
+
 -- B3
+-- Aplica una función a cada elemento de una lista utilizando foldr.
 miMap :: (a -> b) -> [a] -> [b]
-miMap = undefined
+-- En cada paso, la función anónima (\x acc -> ...) aplica 'f x' y lo concatena (:) al acumulador 'acc'.
+miMap f = foldr (\x acc -> f x : acc) []
 
+-- Filtra los elementos de una lista según un predicado utilizando foldr.
 miFilter :: (a -> Bool) -> [a] -> [a]
-miFilter = undefined
+-- Si el elemento 'x' cumple 'p x', se agrega al resultado con (:); si no, se conserva solo 'acc'.
+miFilter p = foldr (\x acc -> if p x then x : acc else acc) []
 
+-- Plegado por la izquierda implementado en términos de foldr.
 miFoldl :: (b -> a -> b) -> b -> [a] -> b
-miFoldl = undefined
+-- En vez de acumular el resultado directamente, 'foldr' va componiendo funciones de tipo (b -> b).
+-- Cada paso (\x k acc -> ...) recibe el acumulador actual 'acc', calcula el nuevo valor (f acc x)
+-- y se lo pasa a la continuación 'k'. Al final, la función obtenida se evalúa pasándole el valor base 'z'.
+miFoldl f z xs = foldr (\x k acc -> k (f acc x)) (\acc -> acc) xs z
