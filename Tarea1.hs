@@ -142,8 +142,17 @@ duracion s1 s2 =
 -- =====================================================================
 
 -- B1
+-- Calcula el promedio de los valores de la lista que son estrictamente mayores
+-- al umbral dado. Devuelve Nothing si no hay ningún elemento que cumpla la condición.
 promedioSobreUmbral :: Double -> [Double] -> Maybe Double
-promedioSobreUmbral = undefined
+promedioSobreUmbral umbral xs =
+  -- 'foldr' procesa la lista con un acumulador en tupla: (suma acumulada, cantidad de elementos).
+  -- La lambda (\x (s, c) -> ...) evalúa cada elemento 'x': si x > umbral, suma y cuenta; si no, deja igual.
+  let (suma, cuenta) = foldr (\x (s, c) -> if x > umbral then (s + x, c + 1) else (s, c)) (0.0, 0 :: Int) xs
+  in if cuenta == 0
+       then Nothing
+       -- 'fromIntegral' convierte la cuenta de tipo Int a Double para permitir la división (/):
+       else Just (suma / fromIntegral cuenta)
 
 -- B2
 movimientosCaballo :: (Int, Int) -> [(Int, Int)]
